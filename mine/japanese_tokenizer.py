@@ -5,8 +5,8 @@
 import sys
 import re
 
-file_name = sys.argv[1]
-out_file_name = sys.argv[2]
+file_name = "in.txt"#sys.argv[1]
+out_file_name = "out.txt"#sys.argv[2]
 dictionary_file_name = "japanese_wordlist.txt"
 
 with open(file_name, 'r', encoding='utf-8') as file:
@@ -24,33 +24,31 @@ with open(file_name, 'r', encoding='utf-8') as file:
                 while True:
                     foundMatch = False
 
-                    for word in wordDictionary:
-                        match = re.search((r'^' + lineLocal + r'$'), re.escape(word), re.MULTILINE)
-                        if match is not None:
-                            #print("found match: " + match.string)
-                            tokenized += (match.string + " ")
-                            line = line[len(lineLocal):len(line)]
-                            lineLocal = line
-                            foundMatch = True
-                            break
+                    if lineLocal in wordDictionary:
+                        print("found match: " + lineLocal)
+                        tokenized += (lineLocal + " ")
+                        line = line[len(lineLocal):len(line)]
+                        lineLocal = line
+                        foundMatch = True
+                        #break
 
-                        if len(lineLocal) == 1:
-                            #print("found single character: " + lineLocal)
-                            tokenized += (lineLocal + " ")
-                            line = line[len(lineLocal):len(line)]
-                            lineLocal = line
-                            foundMatch = True
-                            break
+                    if len(lineLocal) == 1:
+                        print("found single character: " + lineLocal)
+                        tokenized += (lineLocal + " ")
+                        line = line[len(lineLocal):len(line)]
+                        lineLocal = line
+                        foundMatch = True
+                        #break
 
                     if lineLocal == "":
                         break
 
                     if foundMatch == False:
                         lineLocal = lineLocal.rstrip(lineLocal[(len(lineLocal)-1)])
-                        #print("no match, stripping rightmost character: "+ lineLocal)
+                        print("no match, stripping rightmost character: "+ lineLocal)
 
                 if line == "":
                     tokenized += "\n"
-                    #print("tokenized: " + tokenized)
+                    print("tokenized: " + tokenized)
 
             fixed_file.write(tokenized)
